@@ -5,7 +5,7 @@ import {
   SafeAreaView,
   useColorScheme,
 } from 'react-native';
-
+import MainScreen from './containers/MainScreen/MainScreen';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
@@ -18,6 +18,7 @@ const App = () => {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
       }}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <MainScreen />
     </SafeAreaView>
   );
 };
