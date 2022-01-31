@@ -64,6 +64,7 @@ const MainScreen: FC = () => {
       keyExtractor={(item): string => item.id.toString()}
       onRefresh={onRefresh}
       refreshing={loading}
+      testID='mainScreenId'
     />
   );
 };

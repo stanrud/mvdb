@@ -23,7 +23,7 @@ const ListItem: FC<{ item: Video; genre: string | undefined }> = ({
   }
 
   return (
-    <View style={styles.card}>
+    <View style={styles.card} testID='listItemId'>
       <Image source={{ uri: item.image_url }} style={styles.image} />
       <Text
         numberOfLines={1}

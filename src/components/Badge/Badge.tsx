@@ -8,7 +8,7 @@ const Badge: FC<{ name: string | undefined }> = ({ name }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID='badgeId'>
       <Text style={styles.text}>{name}</Text>
     </View>
   );
