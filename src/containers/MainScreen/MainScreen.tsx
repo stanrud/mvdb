@@ -1,30 +1,12 @@
 import React, { FC, useEffect, useState } from 'react';
 import axios from 'axios';
 import { FlatList, ListRenderItem } from 'react-native';
+import { Video, Response } from '../../common/types';
 import ListItem from '../../components/ListItem';
 import { styles } from './styles';
 
 const BASE_URL: string =
   'https://raw.githubusercontent.com/XiteTV/frontend-coding-exercise/main/data/dataset.json';
-
-interface Video {
-  id: number;
-  artist: string;
-  title: string;
-  release_year: number;
-  genre_id: number;
-  image_url: string;
-}
-
-interface Genre {
-  id: number;
-  name: string;
-}
-
-interface Response {
-  genres: Genre[];
-  videos: Video[];
-}
 
 const MainScreen: FC = () => {
   const [data, setData] = useState<Response>({} as Response);

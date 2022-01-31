@@ -1,17 +1,9 @@
 import React, { FC } from 'react';
 import { View, Text, useColorScheme, Image } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Video } from '../../common/types';
 import Badge from '../Badge';
 import { styles } from './styles';
-
-interface Video {
-  id: number;
-  artist: string;
-  title: string;
-  release_year: number;
-  genre_id: number;
-  image_url: string;
-}
 
 const ListItem: FC<{ item: Video; genre: string | undefined }> = ({
   item,
