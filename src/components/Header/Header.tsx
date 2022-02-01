@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import validator from 'validator';
 import { View, TouchableOpacity, useColorScheme } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { getVideos, showFilters } from '../../store/actions/videos';
@@ -14,11 +13,13 @@ const Badge: FC<{ dispatch: Dispatch, filters: Filter }> = ({ dispatch, filters 
   const [search, setSearch] = useState<string>('');
   const isDarkMode = useColorScheme() === 'dark';
 
-  const submitSearch = () => {
-    if (validator.isEmpty(search, { ignore_whitespace: true })) {
-      setSearch('');
-    }
-    dispatch(getVideos({ ...filters, search }));
+  const submitSearch = (text: string) => {
+    setSearch(text);
+    dispatch(getVideos({ ...filters, search: text.trim().toLowerCase() }));
+  };
+  const clearSearch = () => {
+    setSearch('');
+    dispatch(getVideos({ ...filters, search: '' }));
   };
 
   const triggerFilters = () => dispatch(showFilters())
@@ -29,10 +30,9 @@ const Badge: FC<{ dispatch: Dispatch, filters: Filter }> = ({ dispatch, filters 
         value={search}
         placeholder='Type artist or song name'
         autoCorrect={false}
-        onChangeText={(text) => setSearch(text.trim().toLowerCase())}
+        onChangeText={submitSearch}
         style={styles.searchBar}
-        onContentSizeChange={submitSearch}
-        onIconPress={submitSearch}
+        onIconPress={clearSearch}
       />
       <TouchableOpacity style={styles.filtersIcon} onPress={triggerFilters}>
         <Icon name='filter-variant' size={30} color={isDarkMode ? Colors.lighter : Colors.darker} />
