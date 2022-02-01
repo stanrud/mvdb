@@ -12,12 +12,12 @@ export interface Genre {
   name: string;
 }
 
-export interface Response {
+export interface State {
   genres: Genre[];
   videos: Video[];
+  isGetting: boolean;
 }
 
 export interface Filter {
-  release_year: number[];
-  genre_id: number[];
+  [key: string]: number[];
 }

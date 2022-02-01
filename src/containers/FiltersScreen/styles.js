@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
+  modal: {
     flex: 1,
-    paddingHorizontal: 10,
+    padding: 20
   },
 });
 

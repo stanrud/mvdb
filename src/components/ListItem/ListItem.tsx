@@ -1,21 +1,22 @@
 import React, { FC } from 'react';
 import { View, Text, useColorScheme, Image } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { Video } from '../../common/types';
+import { Genre, Video } from '../../common/types';
 import Badge from '../Badge';
 import { styles } from './styles';
 
-const ListItem: FC<{ item: Video; genre: string | undefined }> = ({
+const ListItem: FC<{ item: Video; genres: Genre[] }> = ({
   item,
-  genre,
+  genres,
 }) => {
   const isDarkMode = useColorScheme() === 'dark';
   if (!item) {
     return null;
   }
+  const genreName = genres?.find(i => i.id === item.genre_id)?.name;
 
   return (
-    <View style={styles.card} testID='listItemId'>
+    <View style={styles.card} testID='listItemId' key={item.id}>
       <Image source={{ uri: item.image_url }} style={styles.image} />
       <Text
         numberOfLines={1}
@@ -28,9 +29,9 @@ const ListItem: FC<{ item: Video; genre: string | undefined }> = ({
       <Text numberOfLines={1} style={styles.artist}>
         {item.artist}
       </Text>
-      {genre ? (
+      {genreName ? (
         <View style={styles.badge}>
-          <Badge name={genre} />
+          <Badge name={genreName} />
         </View>
       ) : null}
     </View>

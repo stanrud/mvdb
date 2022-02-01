@@ -1,54 +1,71 @@
 import React, { FC, useEffect, useState } from 'react';
-import axios from 'axios';
-import { FlatList, ListRenderItem } from 'react-native';
-import { Video, Response } from '../../common/types';
+import {
+  View,
+  FlatList,
+  useColorScheme,
+} from 'react-native';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { getVideos, hideFilters } from '../../store/actions/videos';
+import { Video, Filter, Genre } from '../../common/types';
 import ListItem from '../../components/ListItem';
+import ListEmpty from '../../components/ListEmpty';
 import { styles } from './styles';
+import Header from '../../components/Header';
+import FiltersScreen from '../FiltersScreen/FiltersScreen';
 
-const BASE_URL: string =
-  'https://raw.githubusercontent.com/XiteTV/frontend-coding-exercise/main/data/dataset.json';
+const MainScreen: FC<{
+  dispatch: Dispatch,
+  videos: Video[],
+  genres: Genre[],
+  filters: Filter,
+  isGetting: boolean,
+  isFiltersShowing: boolean,
+}> = ({
+  dispatch,
+  videos,
+  genres,
+  filters,
+  isGetting,
+}) => {
+    const [visible, setVisible] = useState(false);
+    const isDarkMode = useColorScheme() === 'dark';
 
-const MainScreen: FC = () => {
-  const [data, setData] = useState<Response>({} as Response);
-  const [loading, setLoading] = useState<true | false>(false);
+    useEffect(() => {
+      onRefresh();
+    }, []);
 
-  useEffect(() => {
-    onRefresh();
-  }, []);
+    const onRefresh = () => {
+      dispatch(getVideos(filters));
+    };
 
-  const onRefresh = () => {
-    setLoading(true);
-    axios
-      .get<Response>(BASE_URL)
-      .then(response => {
-        setData(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-      });
+    return (
+      <View style={styles.container}>
+        <Header />
+        <FlatList
+          key={2}
+          numColumns={2}
+          data={videos}
+          // style={styles.container}
+          contentContainerStyle={{ flexGrow: 1 }}
+          renderItem={({ item }) => <ListItem item={item} genres={genres} />}
+          keyExtractor={(item): string => item.id.toString()}
+          onRefresh={onRefresh}
+          refreshing={isGetting}
+          testID='mainScreenId'
+          ListEmptyComponent={<ListEmpty />}
+        />
+        <FiltersScreen onRefresh={onRefresh} />
+      </View>
+    );
   };
 
-  const renderItem: ListRenderItem<Video> = ({ item }) => {
-    const genre = data.genres?.find(i => i.id === item.genre_id)?.name;
+const mapStateToProps = (state: any) => ({
+  videos: state.videos.videos,
+  genres: state.videos.genres,
+  filters: state.videos.filters,
+  isGetting: state.videos.isGetting,
+  isFiltersShowing: state.videos.isFiltersShowing
+});
 
-    return <ListItem item={item} genre={genre} />;
-  };
-
-  return (
-    <FlatList
-      key={2}
-      numColumns={2}
-      data={data.videos}
-      style={styles.container}
-      renderItem={renderItem}
-      keyExtractor={(item): string => item.id.toString()}
-      onRefresh={onRefresh}
-      refreshing={loading}
-      testID='mainScreenId'
-    />
-  );
-};
-
-export default MainScreen;
+export default connect(mapStateToProps)(MainScreen);

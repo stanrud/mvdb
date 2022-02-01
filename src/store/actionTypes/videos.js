@@ -1,0 +1,6 @@
+export const GET_VIDEOS = 'GET_VIDEOS';
+export const GET_VIDEOS_SUCCESS = 'GET_VIDEOS_SUCCESS';
+export const GET_VIDEOS_FAILED = 'GET_VIDEOS_FAILED';
+export const SHOW_FILTERS = 'SHOW_FILTERS';
+export const HIDE_FILTERS = 'HIDE_FILTERS';
+export const SET_GENRE = 'SET_GENRE';
