@@ -1,5 +1,8 @@
 # MVDB - a music videos database as a test project
 
+
+![image description](https://github.com/stanrud/mvdb/blob/main/images/1.jpg)
+
 ### Before you start
 
 ***MVDB*** requires a couple of previous steps to start with the installation. 
