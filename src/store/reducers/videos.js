@@ -1,4 +1,8 @@
 import * as types from '../actionTypes/videos';
+import {
+  filterBySearchAndGenres,
+  setUniqueGenre
+} from '../../helpers/filters';
 
 const filters = {
   search: '',
@@ -24,13 +28,7 @@ export default function useReducer(state = initialState, action) {
     case types.GET_VIDEOS_SUCCESS:
       return {
         ...state,
-        videos: action.data.videos
-          .filter(({ title, artist }) => title.toString().toLowerCase().includes(state.filters.search)
-            || artist.toString().toLowerCase().includes(state.filters.search))
-          .filter(f =>  (state.filters.genre_id.length > 0) ?
-            state.filters.genre_id.some(g => g === f.genre_id) :
-            true
-          ),
+        videos: filterBySearchAndGenres(action.data.videos, state.filters),
         genres: action.data.genres,
         isGetting: false
       }
@@ -55,9 +53,7 @@ export default function useReducer(state = initialState, action) {
         ...state,
         filters: {
           ...state.filters,
-          genre_id: (state.filters.genre_id.indexOf(action.genreId) > -1) ?
-            state.filters.genre_id.filter(i => i !== action.genreId) :
-            [...state.filters.genre_id, action.genreId]
+          genre_id: setUniqueGenre(state.filters.genre_id, action.genreId)
         }
       }
     case types.REMOVE_GENRE:
