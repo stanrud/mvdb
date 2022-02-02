@@ -10,7 +10,11 @@ import {
 } from 'react-native';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { hideFilters, setGenre } from '../../store/actions/videos';
+import {
+  setGenre,
+  removeGenre,
+  hideFilters,
+} from '../../store/actions/videos';
 import { Chip } from 'react-native-paper';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,17 +22,17 @@ import { Filter, Genre } from '../../common/types';
 import { styles } from './styles';
 
 const FiltersScreen: FC<{
-  onRefresh: any,
+  onRefresh: () => void,
   dispatch: Dispatch,
   genres: Genre[],
   filters: Filter,
-  isFiltersShowing: boolean,
+  visible: boolean,
 }> = ({
   onRefresh,
   dispatch,
   genres,
   filters,
-  isFiltersShowing
+  visible
 }) => {
     const isDarkMode = useColorScheme() === 'dark';
 
@@ -38,26 +42,48 @@ const FiltersScreen: FC<{
     }
 
     const setGenreFilter = (genreId: number) => dispatch(setGenre(genreId));
+    
+    const removeGenreFilter = () => dispatch(removeGenre());
+
+    const renderGenres = () => {
+      const selected = (genreId: number): boolean => filters.genre_id.indexOf(genreId) > -1;
+    
+      return(
+        <View style={styles.genres}>
+          {genres?.map(genre =>
+            <Chip
+              key={genre.id}
+              style={{ margin: 2, backgroundColor: selected(genre.id) ? '#00587A' : Colors.light }}
+              icon={selected(genre.id) ? 'check' : 'plus'}
+              selected={selected(genre.id)}
+              onPress={() => setGenreFilter(genre.id)}
+            >
+              <Text style={{ color: selected(genre.id) ? Colors.light : Colors.dark }}>
+                {genre.name}
+              </Text>
+            </Chip>
+          )}
+        </View>
+      )
+    };
 
     return (
-      <Modal visible={isFiltersShowing} onDismiss={hideModal} style={styles.modal}>
+      <Modal visible={visible} onDismiss={hideModal} style={styles.modal}>
         <SafeAreaView style={{ flex: 1, backgroundColor: isDarkMode ? Colors.darker : Colors.lighter, }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 5, paddingHorizontal: 10 }}>
-            <Text style={{ fontSize: 22, fontWeight: '500' }}>Genres</Text>
+          <View style={styles.modalHeader}>
+            <Text style={{ ...styles.headerText, color: isDarkMode ? Colors.lighter : Colors.darker }}>Genres</Text>
             <TouchableOpacity onPress={() => hideModal()}>
-              <Icon name='chevron-down' size={30} />
+              <Icon name='chevron-down' size={30} color={isDarkMode ? Colors.lighter : Colors.darker} />
             </TouchableOpacity>
           </View>
-          <ScrollView style={{ flex: 1, padding: 10 }}>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {genres?.map(genre => <Chip key={genre.id} style={{ margin: 2 }} icon={filters.genre_id.indexOf(genre.id) > -1 ? 'check' : 'plus'} selected={filters.genre_id.indexOf(genre.id) > -1} onPress={() => setGenreFilter(genre.id)}>{genre.name}</Chip>)}
-            </View>
-            <View style={{ flex: 1, flexDirection: 'column', marginVertical: 20 }}>
-              <TouchableOpacity onPress={() => { setGenre([]) }} style={{ backgroundColor: 'yellow', flex: 1, alignItems: 'center', marginVertical: 10, padding: 15, borderRadius: 10 }}>
-                <Text>Reset</Text>
+          <ScrollView style={styles.modalScroll}>
+            {renderGenres()}
+            <View style={styles.buttons}>
+              <TouchableOpacity onPress={() => removeGenreFilter()} style={{ ...styles.button, backgroundColor: '#84A9AC' }}>
+                <Text style={styles.buttonText}>Reset</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={hideModal} style={{ backgroundColor: 'green', flex: 1, alignItems: 'center', marginVertical: 10, padding: 15, borderRadius: 10 }}>
-                <Text style={{ color: '#FFF' }}>Apply</Text>
+              <TouchableOpacity onPress={hideModal} style={{ ...styles.button, backgroundColor: '#00587A' }}>
+                <Text style={styles.buttonText}>Apply</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -66,10 +92,4 @@ const FiltersScreen: FC<{
     );
   };
 
-const mapStateToProps = (state: any) => ({
-  genres: state.videos.genres,
-  filters: state.videos.filters,
-  isFiltersShowing: state.videos.isFiltersShowing
-});
-
-export default connect(mapStateToProps)(FiltersScreen);
+export default connect()(FiltersScreen);

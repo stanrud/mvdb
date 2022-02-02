@@ -12,6 +12,7 @@ import { styles } from './styles';
 const Badge: FC<{ dispatch: Dispatch, filters: Filter }> = ({ dispatch, filters }) => {
   const [search, setSearch] = useState<string>('');
   const isDarkMode = useColorScheme() === 'dark';
+  const textColor = isDarkMode ? Colors.lighter : Colors.darker;
 
   const submitSearch = (text: string) => {
     setSearch(text);
@@ -22,16 +23,26 @@ const Badge: FC<{ dispatch: Dispatch, filters: Filter }> = ({ dispatch, filters 
     dispatch(getVideos({ ...filters, search: '' }));
   };
 
-  const triggerFilters = () => dispatch(showFilters())
+  const triggerFilters = () => dispatch(showFilters());
 
   return (
-    <View style={styles.headerContainer} >
+    <View
+      testID='headerId'
+      style={styles.headerContainer}
+    >
       <Searchbar
         value={search}
         placeholder='Type artist or song name'
+        inputStyle={{ color: textColor }}
+        placeholderTextColor={textColor}
+        iconColor={textColor}
+        selectionColor={textColor}
         autoCorrect={false}
         onChangeText={submitSearch}
-        style={styles.searchBar}
+        style={{
+          ...styles.searchBar,
+          backgroundColor: isDarkMode ? Colors.dark : Colors.light
+        }}
         onIconPress={clearSearch}
       />
       <TouchableOpacity style={styles.filtersIcon} onPress={triggerFilters}>
@@ -41,8 +52,4 @@ const Badge: FC<{ dispatch: Dispatch, filters: Filter }> = ({ dispatch, filters 
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  filters: state.videos.filters,
-});
-
-export default connect(mapStateToProps)(Badge);
+export default connect()(Badge);

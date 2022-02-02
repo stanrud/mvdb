@@ -4,3 +4,4 @@ export const GET_VIDEOS_FAILED = 'GET_VIDEOS_FAILED';
 export const SHOW_FILTERS = 'SHOW_FILTERS';
 export const HIDE_FILTERS = 'HIDE_FILTERS';
 export const SET_GENRE = 'SET_GENRE';
+export const REMOVE_GENRE = 'REMOVE_GENRE';

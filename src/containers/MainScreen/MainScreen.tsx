@@ -1,12 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
-import {
-  View,
-  FlatList,
-  useColorScheme,
-} from 'react-native';
+import React, { FC, useEffect } from 'react';
+import { View, FlatList } from 'react-native';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { getVideos, hideFilters } from '../../store/actions/videos';
+import { getVideos } from '../../store/actions/videos';
 import { Video, Filter, Genre } from '../../common/types';
 import ListItem from '../../components/ListItem';
 import ListEmpty from '../../components/ListEmpty';
@@ -27,10 +23,8 @@ const MainScreen: FC<{
   genres,
   filters,
   isGetting,
+  isFiltersShowing
 }) => {
-    const [visible, setVisible] = useState(false);
-    const isDarkMode = useColorScheme() === 'dark';
-
     useEffect(() => {
       onRefresh();
     }, []);
@@ -41,21 +35,24 @@ const MainScreen: FC<{
 
     return (
       <View style={styles.container}>
-        <Header />
+        <Header filters={filters} />
         <FlatList
           key={2}
           numColumns={2}
           data={videos}
-          // style={styles.container}
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item }) => <ListItem item={item} genres={genres} />}
           keyExtractor={(item): string => item.id.toString()}
           onRefresh={onRefresh}
           refreshing={isGetting}
-          testID='mainScreenId'
           ListEmptyComponent={<ListEmpty />}
         />
-        <FiltersScreen onRefresh={onRefresh} />
+        <FiltersScreen
+          genres={genres}
+          filters={filters}
+          onRefresh={onRefresh}
+          visible={isFiltersShowing}
+        />
       </View>
     );
   };

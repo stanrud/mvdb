@@ -39,3 +39,9 @@ export const setGenre = genreId => {
     genreId
   })
 }
+
+export const removeGenre = () => {
+  return({
+    type: types.REMOVE_GENRE,
+  })
+}

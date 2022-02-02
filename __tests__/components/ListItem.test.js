@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ListItem from '../../../src/components/ListItem/ListItem';
+import ListItem from '../../src/components/ListItem/ListItem';
 import { render } from '@testing-library/react-native';
 
 const videoItem = {

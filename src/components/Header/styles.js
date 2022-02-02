@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   searchBar: {
     flex: 1,
     elevation: 0,
+    height: 40
   },
   filtersIcon: {
     marginLeft: 5

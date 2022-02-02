@@ -7,7 +7,7 @@ async function getVideosCall() {
   return await client.get('/dataset.json');
 }
 
-function* getVideos(action) {
+function* getVideos() {
   try {
     const videos = yield call(getVideosCall);
     yield put(getVideosSuccess(videos.data));

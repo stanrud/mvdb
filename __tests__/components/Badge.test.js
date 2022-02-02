@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Badge from '../../../src/components/Badge/Badge';
+import Badge from '../../src/components/Badge/Badge';
 import { render } from '@testing-library/react-native';
 
 const TEST_VALUE = 'TEST_VALUE';
